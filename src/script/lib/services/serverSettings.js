@@ -46,5 +46,29 @@ angular
             return deferred.promise;
         };
 
+        Settings.prototype.getProductList = function () {
+
+            var that = this;
+
+            if (this.productListCache) {
+                return $q.resolve(this.productListCache);
+            }
+
+            var deferred = $q.defer();
+
+            $http
+                .get(settings.server + '/product')
+                .success(function (response) {
+                    that.productListCache = response;
+                    deferred.resolve(response);
+                })
+                .error(function (response) {
+                    Message.error('errorLoadingProductList');
+                    deferred.reject(response);
+                });
+
+            return deferred.promise;
+        };
+
         return new Settings();
     });

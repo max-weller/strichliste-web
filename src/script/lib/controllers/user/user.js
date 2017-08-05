@@ -44,6 +44,17 @@ angular
                 $scope.boundary = result;
             });
 
+        ServerSettings
+            .getProductList()
+            .then(function(result) {
+                $scope.productList = result.entries;
+                $scope.categories = {};
+                result.entries.forEach((p) => {
+                    if (!$scope.categories[p.category]) $scope.categories[p.category] = [];
+                    $scope.categories[p.category].push(p);
+                });
+            });
+
         $scope.backClick = function() {
             Location.gotoHome();
         };
@@ -52,7 +63,7 @@ angular
             Location.gotoTransactions(userId);
         };
 
-        $scope.transactionClick = function(value) {
+        $scope.transactionClick = function(value, productId) {
 
             if(settings.audio.transaction) {
                 Audio.play(settings.audio.transaction);
@@ -70,7 +81,7 @@ angular
             }, 800);
 
             Transaction
-                .createTransaction(userId, value)
+                .createTransaction(userId, value, productId)
                 .success(function() {
                     loadUser(userId);
                 })

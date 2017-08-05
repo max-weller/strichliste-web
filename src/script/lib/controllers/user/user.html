@@ -28,6 +28,14 @@
                     <button class="btn btn-primary btn-lg col-xs-12 col-sm-2" ng-disabled="transactionRunning || boundary.exceedsLowerLimit(user.balance - step)" ng-click="transactionClick(step*-1)" ng-repeat="step in dispenseSteps">{{step | number:2}} {{currency}}</button>
                     <button class="btn btn-primary btn-lg col-xs-12 col-sm-2" ng-disabled="transactionRunning || boundary.exceedsOrEqualsLowerLimit(user.balance)" ng-click="customTransactionClick('spend')" ng-if="customTransactions">? {{currency}}</button>
                 </div>
+
+                <div class="clearfix" ng-repeat="category in categories">
+                    <h3 translate>{{category[0].category}}</h3>
+                    <button class="btn btn-default btn-sm col-xs-12 col-sm-2" ng-disabled="transactionRunning || boundary.exceedsLowerLimit(user.balance - price)" 
+                    title="{{product.name}}"
+                    ng-click="transactionClick(product.price,product.id)" ng-repeat="product in category" ng-if="product.imageUrl != null">
+                    <img ng-src="{{product.imageUrl}}" style="max-width:100%;max-height:50px;"> <br>{{product.price | number:2}} {{currency}}</button>
+                </div>
             </div>
 
             <div class="col-xs-12 col-sm-6">
@@ -36,6 +44,7 @@
                     <tbody>
                     <tr ng-repeat="transaction in user.transactions | orderBy:'-id' | limitTo : 5">
                         <td>{{transaction.createDate | localtime}}</td>
+                        <td>{{transaction.text}}</td>
                         <td class="balance" ng-class="transaction.value < 0 ? 'negative' : ''">{{transaction.value | number:2}} {{currency}}</td>
                     </tr>
                     </tbody>
